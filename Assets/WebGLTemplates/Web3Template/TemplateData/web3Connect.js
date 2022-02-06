@@ -1,12 +1,14 @@
 var myaccount;  //User Account
 var web3; 
+var chainName = "polygon";
 
 function awarkMetaMaskJs(){
   if(typeof window.ethereum==="undefined"){
      alert("please install MetaMask")
   }
+  
   else if (window.ethereum) {
-    web3 = new Web3(new Web3.providers.HttpProvider('https://speedy-nodes-nyc.moralis.io/cc094aa144010d9dcce9e869/polygon/mainnet'));
+    web3 = new Web3(new Web3.providers.HttpProvider('https://speedy-nodes-nyc.moralis.io/cc094aa144010d9dcce9e869/'+chainName +'/mainnet'));
     window.ethereum.enable().catch(
       function(response){
         alert(response.message);
@@ -14,21 +16,19 @@ function awarkMetaMaskJs(){
     ).then(function(account){
       myaccount = account[0]
       console.log("Account Address："+myaccount)
-      //Testing Address, will replace later
-      //myaccount = "0x6d9b9604af48c0c443c89b1a4b7c4f97f0e40701"
       getNFTs(myaccount)
     })
   }
 }
 
 function getNFTs(account){
-  var url = "https://deep-index.moralis.io/api/v2/"+account+"/nft?chain=polygon&format=decimal"
+  var url = "https://deep-index.moralis.io/api/v2/"+account+"/nft?chain="+chainName +"&format=decimal"
   http(url,(res)=>{
     let nfts
     try {
        nfts = JSON.parse(res)
        console.log(nfts)
-       //alert("Wallet connected, you have "+nfts.total+" NFTs")
+       alert("Wallet connected, you have "+nfts.total+" NFTs")
        if(nfts.total>0 && nfts.result!=undefined){
           UsersNftMap = nfts.result
           console.log(UsersNftMap)
@@ -44,6 +44,7 @@ function getNFTs(account){
                 urls += "|"
               }
             }
+            //process opensea CROS issue
             else if(metadata==null && token_uri!=null){
                if(token_uri.indexOf("api.opensea.io")>0){
                    http(token_uri+"?format=json",(_res)=>{
