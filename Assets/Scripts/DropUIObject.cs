@@ -40,7 +40,10 @@ public class DropUIObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     /// <param name="url"></param>
     public void SetNft(string url)
     {
-        
+         isNft = true;
+        nftUrl = url;
+
+        UniGifImage.m_loadOnStartUrl = url;
     }
      
  
@@ -62,6 +65,28 @@ public class DropUIObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         }
     }
 
+
+     public void OnDrag(PointerEventData eventData)//when drag...
+    {
+        MainEditorControl.UIDropOut = true;
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //int lay = LayerMask.NameToLayer("EditorPanel");
+        int lay = 1 << LayerMask.NameToLayer("EditorPanel") | 1 << LayerMask.NameToLayer("EditorObj");
+
+        if (Physics.Raycast(ray, out hitInfo, 100, lay))
+        //if (Physics.Raycast(ray, out hitInfo, 100))
+
+        {
+                TempMoveObject.transform.position = hitInfo.point; 
+        }
+    }
+
+    public void OnEndDrag(PointerEventData eventData)//drag done!
+    {
+        MainEditorControl.UIDropOut = false;
+        if(TempObjPun)TempObjPun.SetMeshCollider(true);
+        TempMoveObject = null;
+    }
     
 
     private float scrollWheelNum;
