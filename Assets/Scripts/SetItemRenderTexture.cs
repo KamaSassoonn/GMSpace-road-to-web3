@@ -177,7 +177,14 @@ public class SetItemRenderTexture : MonoBehaviour
             nftItem = new List<Transform>();
         }
         
-       
+        for (int i = 0; i < urls.Length; i++)
+        {
+            Transform item = Instantiate(imageNFTItem, Contents).transform;
+            item.GetComponent<UniGifImage>().m_loadOnStartUrl = urls[i];
+            item.GetComponent<DropUIObject>().SetNft(urls[i]);
+
+            nftItem.Add(item);
+        }
     }
 
 }
