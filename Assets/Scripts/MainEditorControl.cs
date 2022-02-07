@@ -102,6 +102,9 @@ public class MainEditorControl : MonoBehaviour
                     }
                     Debug.Log("Set this object to main object");
                     
+                     TempMoveObject = TempMoveObjectPhoton.transform;
+                    
+                    TempObjPun.SetMeshCollider(false);
                    
                 }
 
